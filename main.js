@@ -1,6 +1,7 @@
 window.onload = setup
 var courses = {}
 var currBlock = 1
+var schedules = []
 
 $('#coursesTable').on('click', '.delete', function () {
     $(this).parents('tr').remove();
@@ -9,11 +10,7 @@ $('#coursesTable').on('click', '.delete', function () {
 
 function setup() {
     loadSessions()
-    loadTimetable([
-        { courseName: "CPSC 110", days: 21, beginTime: LocalTime.parse("08:00"), endTime: LocalTime.parse("09:00") },
-        { courseName: "CPSC 121", days: 10, beginTime: LocalTime.parse("09:30"), endTime: LocalTime.parse("11:00") },
-        { courseName: "CPSC 121", days: 21, beginTime: LocalTime.parse("10:00"), endTime: LocalTime.parse("11:00") }
-    ])
+    schedule()
     debugSetup()
 }
 
@@ -140,5 +137,6 @@ function addEmptyBlock() {
 }
 
 function schedule() {
-
+    schedules = scheduleTimetable(courses)
+    loadTimetable(schedules[1])
 }
