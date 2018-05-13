@@ -41,7 +41,7 @@
             <p class="lead">by Yichen (Work in Progress)</p>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <form id="addCourseForm">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -86,11 +86,11 @@
                 </table>
                 <form id="addEmptyBlockForm">
                     <div class="btn-group" role="group" aria-label="Days of the week">
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">M</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">T</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">W</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">T</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">F</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayM">M</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayT">T</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayW">W</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayH">T</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayF">F</button>
                     </div>
                     <br><br>
                     <div class="input-group mb-3">
@@ -107,9 +107,11 @@
                     </div>
                     <button type='button' class="btn btn-primary" onclick="addEmptyBlock()" id="buttonAddEmptyBlock">Add Empty Block</button>
                 </form>
+                <br>
+                <button type="button" class="btn btn-info" onclick="schedule()" id="schedule">Schedule</button>
             </div>
-            <div class="col-md-9">
-                <table class="table table-sm" id="timetable">
+            <div class="col-md-8">
+                <table class="table table-sm table-bordered" id="timetable">
                     <thead>
                         <tr>
                             <th scope="col">Time</th>
@@ -121,35 +123,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">0800</th>
-                            <td rowspan="2" style="background-color:lightgray">CPSC 121</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">0830</th>
-                            <td rowspan="2" style="background-color:lightgray">CPSC 110</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">0900</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">0930</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -164,6 +137,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.8.2/js-joda.min.js"></script>
+    <script src="prefix.js"></script>
     <script src="parser.js"></script>
     <script src="scheduler.js"></script>
 </body>

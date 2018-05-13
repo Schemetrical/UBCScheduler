@@ -34,8 +34,8 @@ function parseSections(year, session, subject, course, term, completion) {
         let activity = $(items[2]).text()
         let courseTerm = $(items[3]).text()
         // let interval = $(items[4]).text()
-        let days = $(items[5]).text()
-        let startTime = $(items[6]).text()
+        let days = parseWeekdays($(items[5]).text())
+        let beginTime = $(items[6]).text()
         let endTime = $(items[7]).text()
         // let comments = $(items[8]).text()
         if (courseTerm !== term && courseTerm !== "1-2") {
@@ -45,23 +45,36 @@ function parseSections(year, session, subject, course, term, completion) {
         if (section === "") {
             sections[sections.length - 1].times.push({
                 days: days, 
-                startTime: startTime, 
+                beginTime: beginTime, 
                 endTime: endTime
             })
             return
         }
         sections.push({status: status, section: section, activity: activity, times: [{
                 days: days, 
-                startTime: startTime, 
+                beginTime: beginTime, 
                 endTime: endTime
             }]
         })
     }
 
+    function parseWeekdays(weekdayString) {
+        let weekdayMask = Weekday.None
+        let days = weekdayString.split(" ")
+        for (day of days) {
+            if (day === "Mon") weekdayMask += Weekday.Monday
+            if (day === "Tue") weekdayMask += Weekday.Tuesday
+            if (day === "Wed") weekdayMask += Weekday.Wednesday
+            if (day === "Thu") weekdayMask += Weekday.Thursday
+            if (day === "Fri") weekdayMask += Weekday.Friday
+        }
+        return weekdayMask
+    }
+
     function postprocessSections(sections) {
         sections = sections.filter(function(section) {
             // filter out all sections with no times or waitlist
-            return section.times.length > 0 && section.activity !== "Waiting List" && $.trim(section.times[0].days) !== ""
+            return section.times.length > 0 && section.activity !== "Waiting List" && section.times[0].days != Weekday.None
         })
         if (sections.length <= 0) return
         // take the first item's activity as the main activity, such as "Lecture" or "Laboratory"
