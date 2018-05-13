@@ -60,6 +60,9 @@ function parseSections(year, session, subject, course, term, completion) {
                 }]
             })
         }
+        sections = sections.filter(function(section) {
+            return section.times.length > 0
+        })
         completion(sections)
     }
     $.ajax({ url: `https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`, success: parse });
