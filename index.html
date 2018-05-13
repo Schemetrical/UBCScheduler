@@ -29,7 +29,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="https://github.com/Schemetrical/UBCScheduler" target="_blank">Github</a>
                 </li>
             </ul>
         </div>
@@ -41,7 +41,7 @@
             <p class="lead">by Yichen (Work in Progress)</p>
         </div>
         <div class="row">
-            <div class="col-3">
+            <div class="col-md-3">
                 <form id="addCourseForm">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -71,10 +71,44 @@
                         </div>
                         <input type="text" class="form-control" placeholder="110" id="inputCourse" required>
                     </div>
-                    <button class="btn btn-primary" onclick="addCourse()">Add</button>
+                    <button type='button' class="btn btn-primary" onclick="addCourse()" id="buttonAdd">Add</button>
+                </form>
+                <br>
+                <table class="table table-sm" id="coursesTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Course</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <form id="addEmptyBlockForm">
+                    <div class="btn-group" role="group" aria-label="Days of the week">
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">M</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">T</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">W</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">T</button>
+                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off">F</button>
+                    </div>
+                    <br><br>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" for="inputBeginTime">Begin</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="08:00" id="inputBeginTime" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" for="inputEndTime">End</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="09:00" id="inputEndTime" required>
+                    </div>
+                    <button type='button' class="btn btn-primary" onclick="addEmptyBlock()" id="buttonAddEmptyBlock">Add Empty Block</button>
                 </form>
             </div>
-            <div class="col">
+            <div class="col-md-9">
                 <table class="table table-sm" id="timetable">
                     <thead>
                         <tr>
@@ -129,6 +163,7 @@
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.8.2/js-joda.min.js"></script>
     <script src="parser.js"></script>
     <script src="scheduler.js"></script>
 </body>
