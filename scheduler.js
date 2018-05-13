@@ -2,6 +2,7 @@ window.onload = setup
 
 function setup() {
     loadSessions()
+    loadEmptyTimetable()
 }
 
 function loadSessions() {
@@ -12,6 +13,18 @@ function loadSessions() {
         });
         dropdown.val(sessions[0]);
     })
+}
+
+function loadEmptyTimetable() {
+    var timetable = $("#timetable > tbody")
+    for (let i = 1000; i <= 2100; i += 30) {
+        row = $("<tr></tr>")
+        row.append($(`<th scope=\"row\">${i}</th>`))
+        for (let j = 0; j < 5; j++) {
+            row.append($("<td></td>"))
+        }
+        timetable.append(row)
+    }
 }
 
 function addCourse() {
