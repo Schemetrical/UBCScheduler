@@ -1,7 +1,6 @@
 function scheduleTimetable(courses) {
     let schedules = scheduleCourses(courses)
     schedules = scheduleLabsTuts(schedules)
-    console.log(schedules)
     return schedules.map(convertSchedule)
 }
 
@@ -21,9 +20,7 @@ function scheduleListOfSchedules(listOfSchedules, sections) {
         // => [[D1], [D2], [D3]]
         return sections.map(section => [section])
     }
-    return listOfSchedules.flatMap(function (schedule) {
-        return possibleSchedules(schedule, sections)
-    })
+    return listOfSchedules.flatMap(schedule => possibleSchedules(schedule, sections))
 }
 
 function scheduleLabsTuts(schedules) {
@@ -32,10 +29,8 @@ function scheduleLabsTuts(schedules) {
     // then keep going until there are none left
     return schedules.flatMap(function (schedule) {
         listOfSections = schedule.flatMap(function (section) {
-            console.log(Object.values(section.subactivities))
             return Object.values(section.subactivities)
         })
-        // console.log(scheduleListOfSections(listOfSections, schedule))
 
         return scheduleListOfSections(listOfSections, [schedule])
     })
@@ -47,12 +42,7 @@ function scheduleListOfSections(listOfSections, listOfSchedules) {
         return listOfSchedules
     }
     let sections = listOfSections.pop()
-    
     return scheduleListOfSections(listOfSections, scheduleListOfSchedules(listOfSchedules, sections))
-
-    // return listOfSections.flatMap(function (sections) {
-    //     return scheduleListOfSchedules([schedule], sections)
-    // })
 }
 
 // [A, B, C], [D1 D2 D3] => [[A, B, C, D1], [A, B, C, D2], ...]

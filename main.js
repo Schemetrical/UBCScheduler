@@ -2,17 +2,6 @@ window.onload = setup
 var courses = []
 var currBlock = 1
 var schedules = []
-let defaultOptions = {
-    visiblePages: 4,
-    first: "⇤",
-    last: "⇥",
-    prev: "←",
-    next: "→",
-    startPage: 1,
-    onPageClick: function (event, page) {
-        loadTimetable(schedules[page - 1])
-    }
-}
 
 function setup() {
     $('#coursesTable').on('click', '.delete', function () {
@@ -155,7 +144,7 @@ function addEmptyBlock() {
 
 function noDeathPls() {
     let courseName = "No 8am"
-    if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) return
+    if (courses.filter(item => item.courseName === courseName).length > 0) return
     addCourseToTable(courseName, [{
         status: "", section: courseName, activity: "", subactivities:{}, times: [{
             days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,

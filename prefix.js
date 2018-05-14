@@ -16,3 +16,14 @@ const flatMap = (f, xs) =>
 Array.prototype.flatMap = function (f) { // why does this not exist by default idk
     return flatMap(f, this)
 }
+let defaultOptions = {
+    visiblePages: 4,
+    first: "⇤",
+    last: "⇥",
+    prev: "←",
+    next: "→",
+    startPage: 1,
+    onPageClick: function (event, page) {
+        loadTimetable(schedules[page - 1])
+    }
+}
