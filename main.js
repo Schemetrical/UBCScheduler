@@ -34,6 +34,7 @@ function loadSessions() {
             dropdown.append($("<option />").val(this).text(this));
         });
         dropdown.val(sessions[0]);
+        $("#inputSessionLabel").text("Session")
     })
 }
 
