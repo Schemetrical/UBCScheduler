@@ -82,13 +82,13 @@ function loadTimetable(schedule) {
 function addCourse() {
     let yearSession = $("#inputSession").val() // 2017W
 
-    // TODO: Need bettererror handling here
+    // TODO: Need better error handling here
     if (yearSession == null) {
         alert("Please select a session, or wait for it to load if there is none.")
         return
     }
 
-    let courseName = $("#inputCourse").val()
+    let courseName = $("#inputCourse").val().toUpperCase()
     let term = $("#inputTerm").val()
     let regex = /([A-Z]{4})\s?(\w+)/
     let match = regex.exec(courseName)
@@ -109,30 +109,35 @@ function addCourse() {
     let year = yearSession.slice(0, -1) // 2017
     let session = yearSession.substr(-1); // W
     $("#buttonAdd").attr("disabled", true);
+    $("#buttonAdd").text("Adding...")
     lockSectionAndTerm(true)
     parseSections(year, session, subject, course, term, function (sections) {
         if (!sections) {
-            $("#buttonAdd").attr("disabled", false);
             if (courses.length == 0) {
                 lockSectionAndTerm(false)
             }
             alert("Course not found.")
             // TODO: Throw a nicer error here
         } else {
-            $("#buttonAdd").attr("disabled", false);
             addCourseToTable(courseName, sections)
         }
+        $("#buttonAdd").attr("disabled", false);
+        $("#buttonAdd").text("Add Course")
     })
 }
 
 function lockSectionAndTerm(locked) {
     $("#inputSession").attr("disabled", locked);
     $("#inputTerm").attr("disabled", locked);
+    if (locked) {
+        $("#timetableLabel").text(`${$("#inputSession").val() + $("#inputTerm").val()} Timetable`)
+    } else {
+        $("#timetableLabel").text("Timetable")
+    }
 }
 
 function addCourseToTable(courseName, sections) {
     courses.push({ courseName: courseName, sections: sections })
-    console.log(courses)
     var courseTable = $("#coursesTable > tbody")
     row = $("<tr></tr>")
     // TODO: Change this to dropdown allowing locking course sections
@@ -158,16 +163,16 @@ function addEmptyBlock() {
     if (fri) weekdayMask += Weekday.Friday
 
     // TODO: Need validation here
+    if (weekdayMask == Weekday.None) {
+        alert("Please select one or more days of the week.")
+        return
+    }
     if (!beginTime) {
         alert("Please enter a beginning time.")
         return
     }
     if (!endTime) {
         alert("Please enter a ending time.")
-        return
-    }
-    if (weekdayMask == Weekday.None) {
-        alert("Please select one or more days of the week.")
         return
     }
 
@@ -197,6 +202,8 @@ function noDeathPls() {
 }
 
 function schedule() {
+    $("#schedule").attr("disabled", true);
+    $("#schedule").text("Scheduling...")
     schedules = scheduleTimetable(courses.slice(0)) // schedule using a shallow copy
     $('#schedule-pagination').twbsPagination("destroy");
     if (schedules.length) {
@@ -209,5 +216,10 @@ function schedule() {
             totalPages: 1
         }))
         loadTimetable(schedules)
+        if (courses.length != 0) {
+            alert("No timetable could be generated with these courses.")
+        }
     }
+    $("#schedule").attr("disabled", false);
+    $("#schedule").text("Schedule")
 }

@@ -32,10 +32,12 @@
                     <a class="nav-link" href="https://github.com/Schemetrical/UBCScheduler" target="_blank">Github</a>
                 </li>
             </ul>
+            <ul class="nav navbar-nav ml-auto justify-content-end">
+                <span class="navbar-text">
+                    0.1.0
+                </span>
+            </ul>
         </div>
-        <span class="navbar-text">
-            0.1.0
-        </span>
     </nav>
 
     <div class="container">
@@ -44,87 +46,102 @@
             <p class="lead">by Yichen (Work in Progress)</p>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <form id="addCourseForm">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="inputSession">Session</label>
-                        </div>
-                        <select class="custom-select" id="inputSession">
-                        </select>
+            <div class="col-lg-3">
+                <h5>1. Choose session and term, then add your courses</h5>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputSession">Session</label>
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="inputTerm">Term</label>
-                        </div>
-                        <select class="custom-select" id="inputTerm">
-                            <option selected value="1">1</option>
-                            <option value="2">2</option>
-                        </select>
+                    <select class="custom-select" id="inputSession">
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputTerm">Term</label>
                     </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" for="inputSubject">Course</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" required>
+                    <select class="custom-select" id="inputTerm">
+                        <option selected value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" for="inputSubject">Course</span>
                     </div>
-                    <button type='button' class="btn btn-primary" onclick="addCourse()" id="buttonAdd">Add</button>
-                </form>
-                <br>
-                <table class="table table-sm" id="coursesTable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Course</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <form id="addEmptyBlockForm">
-                    <div class="btn-group" role="group" aria-label="Days of the week">
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayM">M</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayT">T</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayW">W</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayH">T</button>
-                        <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayF">F</button>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" for="inputBeginTime">Begin</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="08:00" id="inputBeginTime" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" for="inputEndTime">End</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="09:00" id="inputEndTime" required>
-                    </div>
-                    <button type='button' class="btn btn-primary" onclick="addEmptyBlock()" id="buttonAddEmptyBlock">Add Empty Block</button>
-                    <button type='button' class="btn btn-primary" onclick="noDeathPls()" id="buttonAddNo8AM">No 8am</button>
-                </form>
-                <br>
-                <button type="button" class="btn btn-info" onclick="schedule()" id="schedule">Schedule</button>
+                    <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" required>
+                </div>
+                <button type='button' class="btn btn-primary" onclick="addCourse()" id="buttonAdd">Add Course</button>
+                <br><br>
+
+
+                <h5>2. Optionally add restrictions</h5>
+                <div class="btn-group" role="group" aria-label="Days of the week">
+                    <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayM">M</button>
+                    <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayT">T</button>
+                    <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayW">W</button>
+                    <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayH">T</button>
+                    <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayF">F</button>
+                </div>
                 <br>
                 <br>
-                <ul id="schedule-pagination" class="pagination"></ul>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" for="inputBeginTime">Begin</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="08:00" id="inputBeginTime" required>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" for="inputEndTime">End</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="09:00" id="inputEndTime" required>
+                </div>
+                <button type='button' class="btn btn-primary" onclick="addEmptyBlock()" id="buttonAddEmptyBlock">Add Restriction</button>
+                <button type='button' class="btn btn-light" onclick="noDeathPls()" id="buttonAddNo8AM">No 8am</button>
+                <br><br>
+
+
+                <h5>3. Schedule!</h5>
+                <button type="button" class="btn btn-primary" onclick="schedule()" id="schedule">Schedule</button>
+                <br><br>
             </div>
 
             <!-- COLUMN 2 -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 id="timetableLabel">Timetable</h4>
+                        <table class="table table-sm" id="coursesTable">
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Course</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <ul id="schedule-pagination" class="pagination"></ul> <!-- TODO: make pagination responsive -->
+            </div>
 
-            <div class="col-md-8">
+            <!-- COLUMN 3 -->
+            <div class="col-lg-5">
                 <table class="table table-sm table-bordered" id="timetable">
                     <thead>
                         <tr>
                             <th scope="col">Time</th>
-                            <th scope="col">Monday</th>
-                            <th scope="col">Tuesday</th>
-                            <th scope="col">Wednesday</th>
-                            <th scope="col">Thursday</th>
-                            <th scope="col">Friday</th>
+                            <th scope="col">Mon</th>
+                            <th scope="col">Tue</th>
+                            <th scope="col">Wed</th>
+                            <th scope="col">Thu</th>
+                            <th scope="col">Fri</th>
                         </tr>
                     </thead>
                     <tbody>

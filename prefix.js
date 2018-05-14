@@ -17,7 +17,7 @@ Array.prototype.flatMap = function (f) { // why does this not exist by default i
     return flatMap(f, this)
 }
 let defaultOptions = {
-    visiblePages: 4,
+    visiblePages: 3,
     first: "⇤",
     last: "⇥",
     prev: "←",

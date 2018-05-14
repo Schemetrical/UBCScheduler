@@ -3,5 +3,14 @@
     text-align: center;
 }
 
-table { table-layout: fixed; }
-td { width: 18%; }
+#timetable { table-layout: fixed; }
+#timetable > tbody > tr > td { 
+    width: 18%; 
+    font-size: 0.8em
+}
+
+/* #timetable > tbody > tr, #timetable > thead > tr {
+    line-height: 18px;
+    min-height: 18px;
+    height: 18px;
+ } */

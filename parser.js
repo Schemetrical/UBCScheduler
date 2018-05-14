@@ -8,7 +8,7 @@ function parseSessions(completion) {
             sessions.push(match[1] + match[2])
             match = pattern.exec(data);
         }
-        completion(sessions)
+        completion(sessions.sort().reverse())
     }
     $.ajax({ url: 'https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main', success: parse });
 }
