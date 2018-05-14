@@ -18,11 +18,14 @@ function parseSections(year, session, subject, course, term, completion) {
         var sections = []
 
         var parser = new DOMParser();
-        var doc = $($.parseHTML(data))
-        var rows = doc.find('.section-summary')[0].children[1].children
-
-        for (let row of rows) {
-            parseRow(row, sections)
+        try {
+            var doc = $($.parseHTML(data))
+            var rows = doc.find('.section-summary')[0].children[1].children
+    
+            for (let row of rows) {
+                parseRow(row, sections)
+            }
+        } catch (err) {
         }
         completion(postprocessSections(sections))
     }

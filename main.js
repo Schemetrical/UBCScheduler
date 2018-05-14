@@ -78,22 +78,43 @@ function loadTimetable(schedule) {
 
 function addCourse() {
     let yearSession = $("#inputSession").val() // 2017W
-    let subject = $("#inputSubject").val()
-    let course = $("#inputCourse").val()
+
+    // TODO: Need bettererror handling here
+    if (yearSession == null) {
+        alert("Please select a session, or wait for it to load if there is none.")
+        return
+    }
+
+    let courseName = $("#inputCourse").val()
     let term = $("#inputTerm").val()
-    let courseName = subject + " " + course
+    let regex = /([A-Z]{4})\s?(\w+)/
+    let match = regex.exec(courseName)
 
     // TODO: Need error handling here
-    if (!course || !subject || yearSession == null) return
-    if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) return
+    if (!match) {
+        alert("Please enter a valid course code.")
+        return
+    }
+    let subject = match[1]
+    let course = match[2]
+    courseName = subject + " " + course
+    if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) {
+        alert("This course has already been added.")
+        return
+    }
 
     let year = yearSession.slice(0, -1) // 2017
     let session = yearSession.substr(-1); // W
     $("#buttonAdd").attr("disabled", true);
     lockSectionAndTerm()
     parseSections(year, session, subject, course, term, function (sections) {
-        $("#buttonAdd").attr("disabled", false);
-        addCourseToTable(courseName, sections)
+        if (!sections) {
+            $("#buttonAdd").attr("disabled", false);
+            alert("Course not found.")
+            // TODO: Throw a nicer error here
+        } else {
+            addCourseToTable(courseName, sections)
+        }
     })
 }
 
@@ -129,8 +150,19 @@ function addEmptyBlock() {
     if (thu) weekdayMask += Weekday.Thursday
     if (fri) weekdayMask += Weekday.Friday
 
-    // TODO: Need error handling here
-    if (!beginTime || !endTime || weekdayMask == Weekday.None) return
+    // TODO: Need validation here
+    if (!beginTime) {
+        alert("Please enter a beginning time.")
+        return
+    }
+    if (!endTime) {
+        alert("Please enter a ending time.")
+        return
+    }
+    if (weekdayMask == Weekday.None) {
+        alert("Please select one or more days of the week.")
+        return
+    }
 
     addCourseToTable("Block " + currBlock, [{
         status: "", section: "Block " + currBlock, activity: "", subactivities:{}, times: [{
@@ -144,7 +176,10 @@ function addEmptyBlock() {
 
 function noDeathPls() {
     let courseName = "No 8am"
-    if (courses.filter(item => item.courseName === courseName).length > 0) return
+    if (courses.filter(item => item.courseName === courseName).length > 0) {
+        alert("You have already chosen to sleep in.")
+        return
+    }
     addCourseToTable(courseName, [{
         status: "", section: courseName, activity: "", subactivities:{}, times: [{
             days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,
