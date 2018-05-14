@@ -81,7 +81,7 @@ function loadTimetable(schedule) {
             let filteredCourse = filteredSchedule[0]
             if (time.equals(filteredCourse.beginTime)) {
                 let duration = filteredCourse.beginTime.until(filteredCourse.endTime, JSJoda.ChronoUnit.MINUTES)
-                row.append($(`<td rowspan="${duration / 30}" style="background-color:lightgray">${filteredCourse.courseName}</td>`))
+                row.append($(`<td rowspan="${duration / 30}" style="background-color:lightgray">${filteredCourse.courseName}<br>${filteredCourse.status}</td>`))
             }
         }
     }
@@ -144,7 +144,7 @@ function addEmptyBlock() {
     if (!beginTime || !endTime || weekdayMask == Weekday.None) return
 
     addCourseToTable("Block " + currBlock, [{
-        status: "", section: "Block " + currBlock, activity: "", times: [{
+        status: "", section: "Block " + currBlock, activity: "", subactivities:{}, times: [{
             days: weekdayMask,
             beginTime: LocalTime.parse(beginTime),
             endTime: LocalTime.parse(endTime)
@@ -157,7 +157,7 @@ function noDeathPls() {
     let courseName = "No 8am"
     if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) return
     addCourseToTable(courseName, [{
-        status: "", section: courseName, activity: "", times: [{
+        status: "", section: courseName, activity: "", subactivities:{}, times: [{
             days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,
             beginTime: LocalTime.parse("08:00"),
             endTime: LocalTime.parse("09:00")

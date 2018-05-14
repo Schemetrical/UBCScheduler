@@ -1,19 +1,11 @@
 function scheduleTimetable(courses) {
-    let schedule = scheduleCourses(courses)
-    console.log(schedule)
-    return schedule.map(convertSchedule)
-    // [[
-    //     { courseName: "CPSC 110", days: 21, beginTime: LocalTime.parse("08:00"), endTime: LocalTime.parse("09:00") },
-    //     { courseName: "CPSC 121", days: 10, beginTime: LocalTime.parse("09:30"), endTime: LocalTime.parse("11:00") },
-    //     { courseName: "CPSC 121", days: 21, beginTime: LocalTime.parse("10:00"), endTime: LocalTime.parse("11:00") }
-    // ], [
-    //     { courseName: "CPSC 110", days: 21, beginTime: LocalTime.parse("09:00"), endTime: LocalTime.parse("10:00") },
-    //     { courseName: "CPSC 110", days: 10, beginTime: LocalTime.parse("13:30"), endTime: LocalTime.parse("15:00") },
-    //     { courseName: "CPSC 121", days: 10, beginTime: LocalTime.parse("17:00"), endTime: LocalTime.parse("18:00") }
-    // ]]
+    let schedules = scheduleCourses(courses)
+    schedules = scheduleLabsTuts(schedules)
+    console.log(schedules)
+    return schedules.map(convertSchedule)
 }
 
-// => list of Schedules (where Schedules = list of courses)
+// => list of Schedules (where Schedules = list of sections)
 function scheduleCourses(courses) {
     if (courses.length == 0) {
         return []
@@ -23,15 +15,44 @@ function scheduleCourses(courses) {
     return scheduleListOfSchedules(listOfSchedules, course.sections)
 }
 
+// [[A, B, C], [D, E, F]], [D1, D2, D3] => [[A, B, C, D1], [A, B, C, D2], ..., [D, E, F, D2]]
 function scheduleListOfSchedules(listOfSchedules, sections) {
     if (listOfSchedules.length == 0) {
-        return sections.map(function (section) {
-            return [section]
-        })
+        // => [[D1], [D2], [D3]]
+        return sections.map(section => [section])
     }
     return listOfSchedules.flatMap(function (schedule) {
         return possibleSchedules(schedule, sections)
     })
+}
+
+function scheduleLabsTuts(schedules) {
+    // for each schedule
+    // generate a fuck ton of subschedules
+    // then keep going until there are none left
+    return schedules.flatMap(function (schedule) {
+        listOfSections = schedule.flatMap(function (section) {
+            console.log(Object.values(section.subactivities))
+            return Object.values(section.subactivities)
+        })
+        // console.log(scheduleListOfSections(listOfSections, schedule))
+
+        return scheduleListOfSections(listOfSections, [schedule])
+    })
+}
+
+// => [Schedule]
+function scheduleListOfSections(listOfSections, listOfSchedules) {
+    if (listOfSections.length == 0) {
+        return listOfSchedules
+    }
+    let sections = listOfSections.pop()
+    
+    return scheduleListOfSections(listOfSections, scheduleListOfSchedules(listOfSchedules, sections))
+
+    // return listOfSections.flatMap(function (sections) {
+    //     return scheduleListOfSchedules([schedule], sections)
+    // })
 }
 
 // [A, B, C], [D1 D2 D3] => [[A, B, C, D1], [A, B, C, D2], ...]
@@ -58,13 +79,13 @@ function fitsInSchedule(section, schedule) {
 }
 
 function timeCollides(startA, endA, startB, endB) {
-    return !(endB.isBefore(startA) || endA.isBefore(startB))
+    return endB.isAfter(startA) && endA.isAfter(startB)
 }
 
 function convertSchedule(schedule) {
     function convertSection(section) {
         return section.times.map(function (time) {
-            return { courseName: section.section.trim(), days: time.days, beginTime: time.beginTime, endTime: time.endTime }
+            return { courseName: section.section.trim(), status: section.status, days: time.days, beginTime: time.beginTime, endTime: time.endTime }
         })
     }
     return schedule.flatMap(convertSection)
