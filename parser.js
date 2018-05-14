@@ -78,7 +78,11 @@ function parseSections(year, session, subject, course, term, completion) {
     function postprocessSections(sections) {
         sections = sections.filter(function (section) {
             // filter out all sections with no times or waitlist
-            return section.times.length > 0 && section.activity !== "Waiting List" && section.times[0].days != Weekday.None
+            return (section.times.length > 0 && 
+                section.activity !== "Waiting List" && 
+                section.times[0].days != Weekday.None && 
+                section.times[0].beginTime !== "" && 
+                section.times[0].endTime !== "")
         })
         if (sections.length <= 0) return
         // take the first item's activity as the main activity, such as "Lecture" or "Laboratory"
