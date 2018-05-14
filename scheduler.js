@@ -75,7 +75,13 @@ function timeCollides(startA, endA, startB, endB) {
 function convertSchedule(schedule) {
     function convertSection(section) {
         return section.times.map(function (time) {
-            return { courseName: section.section.trim(), status: section.status, days: time.days, beginTime: time.beginTime, endTime: time.endTime }
+            return { 
+                courseName: section.section.trim(), 
+                status: section.status, 
+                days: time.days, beginTime: 
+                time.beginTime, 
+                endTime: time.endTime 
+            }
         })
     }
     return schedule.flatMap(convertSection)
