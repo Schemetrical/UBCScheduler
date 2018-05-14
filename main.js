@@ -143,7 +143,6 @@ function addEmptyBlock() {
     // TODO: Need error handling here
     if (!beginTime || !endTime || weekdayMask == Weekday.None) return
 
-    console.log(beginTime)
     addCourseToTable("Block " + currBlock, [{
         status: "", section: "Block " + currBlock, activity: "", times: [{
             days: weekdayMask,
@@ -152,6 +151,18 @@ function addEmptyBlock() {
         }]
     }])
     currBlock++
+}
+
+function noDeathPls() {
+    let courseName = "No 8am"
+    if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) return
+    addCourseToTable(courseName, [{
+        status: "", section: courseName, activity: "", times: [{
+            days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,
+            beginTime: LocalTime.parse("08:00"),
+            endTime: LocalTime.parse("09:00")
+        }]
+    }])
 }
 
 function schedule() {
