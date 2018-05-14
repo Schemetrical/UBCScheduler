@@ -92,7 +92,8 @@
                         <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayH">T</button>
                         <button type="button" class="btn btn-light" data-toggle="button" aria-pressed="false" autocomplete="off" id="weekdayF">F</button>
                     </div>
-                    <br><br>
+                    <br>
+                    <br>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" for="inputBeginTime">Begin</span>
@@ -109,7 +110,13 @@
                 </form>
                 <br>
                 <button type="button" class="btn btn-info" onclick="schedule()" id="schedule">Schedule</button>
+                <br>
+                <br>
+                <ul id="schedule-pagination" class="pagination"></ul>
             </div>
+
+            <!-- COLUMN 2 -->
+
             <div class="col-md-8">
                 <table class="table table-sm table-bordered" id="timetable">
                     <thead>
@@ -137,6 +144,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.8.2/js-joda.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.1/jquery.twbsPagination.min.js"></script>
     <script src="prefix.js"></script>
     <script src="parser.js"></script>
     <script src="scheduler.js"></script>

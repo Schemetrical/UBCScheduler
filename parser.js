@@ -1,7 +1,7 @@
 function parseSessions(completion) {
     function parse(data) {
         var sessions = []
-        
+
         var pattern = /sessyr=(\d{4})&sesscd=(\w)/g;
         var match = pattern.exec(data)
         while (match !== null) {
@@ -16,11 +16,11 @@ function parseSessions(completion) {
 function parseSections(year, session, subject, course, term, completion) {
     function parse(data) {
         var sections = []
-        
+
         var parser = new DOMParser();
         var doc = $($.parseHTML(data))
         var rows = doc.find('.section-summary')[0].children[1].children
-        
+
         for (let row of rows) {
             parseRow(row, sections)
         }
@@ -35,24 +35,25 @@ function parseSections(year, session, subject, course, term, completion) {
         let courseTerm = $(items[3]).text()
         // let interval = $(items[4]).text()
         let days = parseWeekdays($(items[5]).text())
-        let beginTime = $(items[6]).text()
-        let endTime = $(items[7]).text()
+        let beginTime = preprocessTime($(items[6]).text())
+        let endTime = preprocessTime($(items[7]).text())
         // let comments = $(items[8]).text()
         if (courseTerm !== term && courseTerm !== "1-2") {
-            sections.push({status: status, section: section, activity: activity, times: []})
+            sections.push({ status: status, section: section, activity: activity, times: [] })
             return // Ignore terms that do not apply but take note
         }
         if (section === "") {
             sections[sections.length - 1].times.push({
-                days: days, 
-                beginTime: beginTime, 
+                days: days,
+                beginTime: beginTime,
                 endTime: endTime
             })
             return
         }
-        sections.push({status: status, section: section, activity: activity, times: [{
-                days: days, 
-                beginTime: beginTime, 
+        sections.push({
+            status: status, section: section, activity: activity, times: [{
+                days: days,
+                beginTime: beginTime,
                 endTime: endTime
             }]
         })
@@ -72,7 +73,7 @@ function parseSections(year, session, subject, course, term, completion) {
     }
 
     function postprocessSections(sections) {
-        sections = sections.filter(function(section) {
+        sections = sections.filter(function (section) {
             // filter out all sections with no times or waitlist
             return section.times.length > 0 && section.activity !== "Waiting List" && section.times[0].days != Weekday.None
         })
@@ -93,6 +94,17 @@ function parseSections(year, session, subject, course, term, completion) {
             subactivities[section.activity].push(section)
         }
         return newSections
+    }
+
+    function preprocessTime(time) {
+        if (time.length < 4) {
+            // invalid time
+            return ""
+        } else if (time.length == 4) {
+            return LocalTime.parse("0" + time)
+        } else {
+            return LocalTime.parse(time)
+        }
     }
 
     $.ajax({ url: `https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`, success: parse });

@@ -1,21 +1,38 @@
 window.onload = setup
-var courses = {}
+var courses = []
 var currBlock = 1
 var schedules = []
-
-$('#coursesTable').on('click', '.delete', function () {
-    $(this).parents('tr').remove();
-    delete courses[$(this).parents('tr').children('th').text()]
-});
+let defaultOptions = {
+    visiblePages: 4,
+    first: "⇤",
+    last: "⇥",
+    prev: "←",
+    next: "→",
+    startPage: 1,
+    onPageClick: function (event, page) {
+        loadTimetable(schedules[page - 1])
+    }
+}
 
 function setup() {
+    $('#coursesTable').on('click', '.delete', function () {
+        let text = $(this).parents('tr').children('th').text()
+        courses = courses.filter(function (course) {
+            return course.courseName !== text
+        })
+        $(this).parents('tr').remove();
+    });
+
+    $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+        totalPages: 1
+    }))
     loadSessions()
     schedule()
     debugSetup()
 }
 
 function debugSetup() {
-    addCourseToTable("CPSC 121", [])
+    // addCourseToTable("CPSC 121", [])
 }
 
 function loadSessions() {
@@ -54,7 +71,7 @@ function loadTimetable(schedule) {
         for (let j = 0; j < times.length; j++) {
             row = timetable.children().eq(j)
             time = times[j]
-            filteredSchedule = schedule.filter(function(item) { 
+            filteredSchedule = schedule.filter(function (item) {
                 return (item.days & currWeekday) == currWeekday && time.isBefore(item.endTime) && !item.beginTime.isAfter(time)
             }) // Should result in one course or no course
             if (filteredSchedule.length == 0) {
@@ -79,7 +96,7 @@ function addCourse() {
 
     // TODO: Need error handling here
     if (!course || !subject || yearSession == null) return
-    if (courseName in courses) return
+    if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) return
 
     let year = yearSession.slice(0, -1) // 2017
     let session = yearSession.substr(-1); // W
@@ -97,7 +114,7 @@ function lockSectionAndTerm() {
 }
 
 function addCourseToTable(courseName, sections) {
-    courses[courseName] = sections
+    courses.push({ courseName: courseName, sections: sections })
     console.log(courses)
     var courseTable = $("#coursesTable > tbody")
     row = $("<tr></tr>")
@@ -127,16 +144,28 @@ function addEmptyBlock() {
     if (!beginTime || !endTime || weekdayMask == Weekday.None) return
 
     console.log(beginTime)
-    addCourseToTable("Block " + currBlock++, [{
-        status: "", section: "", activity: "", times: [{
+    addCourseToTable("Block " + currBlock, [{
+        status: "", section: "Block " + currBlock, activity: "", times: [{
             days: weekdayMask,
-            beginTime: beginTime,
-            endTime: endTime
+            beginTime: LocalTime.parse(beginTime),
+            endTime: LocalTime.parse(endTime)
         }]
     }])
+    currBlock++
 }
 
 function schedule() {
-    schedules = scheduleTimetable(courses)
-    loadTimetable(schedules[1])
+    schedules = scheduleTimetable(courses.slice(0)) // schedule using a shallow copy
+    $('#schedule-pagination').twbsPagination("destroy");
+    if (schedules.length) {
+        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+            totalPages: schedules.length
+        }))
+        loadTimetable(schedules[0])
+    } else {
+        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+            totalPages: 1
+        }))
+        loadTimetable(schedules)
+    }
 }
