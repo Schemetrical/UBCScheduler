@@ -29,12 +29,12 @@ function debugSetup() {
 
 function loadSessions() {
     parseSessions(function (sessions) {
+        $("#sessionLabel").text("Session")
         var dropdown = $("#inputSession")
         $.each(sessions, function () {
             dropdown.append($("<option />").val(this).text(this));
         });
         dropdown.val(sessions[0]);
-        $("#inputSessionLabel").text("Session")
     })
 }
 
