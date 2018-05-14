@@ -1,7 +1,7 @@
-function scheduleTimetable(courses) {
+function scheduleTimetable(courses, callback) {
     let schedules = scheduleCourses(courses)
     schedules = scheduleLabsTuts(schedules)
-    return schedules.map(convertSchedule)
+    callback(schedules.map(convertSchedule))
 }
 
 // => list of Schedules (where Schedules = list of sections)

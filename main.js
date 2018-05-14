@@ -205,22 +205,26 @@ function noDeathPls() {
 function schedule() {
     $("#schedule").attr("disabled", true);
     $("#schedule").text("Scheduling...")
-    schedules = scheduleTimetable(courses.slice(0)) // schedule using a shallow copy
-    $('#schedule-pagination').twbsPagination("destroy");
-    if (schedules.length) {
-        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
-            totalPages: schedules.length
-        }))
-        loadTimetable(schedules[0])
-    } else {
-        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
-            totalPages: 1
-        }))
-        loadTimetable(schedules)
-        if (courses.length != 0) {
-            alert("No timetable could be generated with these courses.")
+    
+    var fn = scheduleTimetable.bind(this, courses.slice(0), function (newSchedules) {// schedule using a shallow copy
+        schedules = newSchedules
+        $('#schedule-pagination').twbsPagination("destroy");
+        if (schedules.length) {
+            $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+                totalPages: schedules.length
+            }))
+            loadTimetable(schedules[0])
+        } else {
+            $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+                totalPages: 1
+            }))
+            loadTimetable(schedules)
+            if (courses.length != 0) {
+                alert("No timetable could be generated with these courses.")
+            }
         }
-    }
-    $("#schedule").attr("disabled", false);
-    $("#schedule").text("Schedule")
+        $("#schedule").attr("disabled", false);
+        $("#schedule").text("Schedule")
+    })
+    window.requestAnimationFrame(fn)
 }
