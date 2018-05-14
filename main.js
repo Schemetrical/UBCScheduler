@@ -10,6 +10,9 @@ function setup() {
             return course.courseName !== text
         })
         $(this).parents('tr').remove();
+        if (courses.length == 0) {
+            lockSectionAndTerm(false)
+        }
     });
 
     $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
@@ -17,11 +20,11 @@ function setup() {
     }))
     loadSessions()
     schedule()
-    debugSetup()
+    // debugSetup()
 }
 
 function debugSetup() {
-    // addCourseToTable("CPSC 121", [])
+    addCourseToTable("CPSC 121", [])
 }
 
 function loadSessions() {
@@ -106,21 +109,25 @@ function addCourse() {
     let year = yearSession.slice(0, -1) // 2017
     let session = yearSession.substr(-1); // W
     $("#buttonAdd").attr("disabled", true);
-    lockSectionAndTerm()
+    lockSectionAndTerm(true)
     parseSections(year, session, subject, course, term, function (sections) {
         if (!sections) {
             $("#buttonAdd").attr("disabled", false);
+            if (courses.length == 0) {
+                lockSectionAndTerm(false)
+            }
             alert("Course not found.")
             // TODO: Throw a nicer error here
         } else {
+            $("#buttonAdd").attr("disabled", false);
             addCourseToTable(courseName, sections)
         }
     })
 }
 
-function lockSectionAndTerm() {
-    $("#inputSession").attr("disabled", true);
-    $("#inputTerm").attr("disabled", true);
+function lockSectionAndTerm(locked) {
+    $("#inputSession").attr("disabled", locked);
+    $("#inputTerm").attr("disabled", locked);
 }
 
 function addCourseToTable(courseName, sections) {
