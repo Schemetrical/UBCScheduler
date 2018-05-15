@@ -1,5 +1,5 @@
-var LocalTime = JSJoda.LocalTime;
-var Weekday = {
+let LocalTime = JSJoda.LocalTime;
+let Weekday = {
     None: 0,       // 0 *
     Monday: 1 << 0,  // 1
     Tuesday: 1 << 1,  // 2

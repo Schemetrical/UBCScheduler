@@ -1,86 +1,98 @@
+// Time is {days, beginTime, endTime}
+// Course is {courseName, sections}
+// Section is {sectionName, times:[Time], subactivities:[Subactivity]}
+// Schedule is [Section]
+// Subactivity is [Section]
+
+// Generate schedules using **generative recursion**
 function scheduleTimetable(courses, callback) {
-    let schedules = scheduleCourses(courses)
+    let schedules = scheduleListOfCourse(courses)
     schedules = scheduleLabsTuts(schedules)
     callback(schedules.map(convertSchedule))
 }
 
-// => list of Schedules (where Schedules = list of sections)
-function scheduleCourses(courses) {
-    if (courses.length == 0) {
+// [Course] -> [Schedule]
+function scheduleListOfCourse(listOfCourse) {
+    if (listOfCourse.length == 0) {
         return []
     }
-    let course = courses.pop()
-    let listOfSchedules = scheduleCourses(courses) // [[course, course],[],[]]
-    return scheduleListOfSchedules(listOfSchedules, course.sections)
+    let course = listOfCourse.pop()
+    let listOfSchedules = scheduleListOfCourse(listOfCourse) // [[course, course],[],[]]
+    return scheduleListOfSchedule(listOfSchedules, course.sections)
 }
 
-// [[A, B, C], [D, E, F]], [D1, D2, D3] => [[A, B, C, D1], [A, B, C, D2], ..., [D, E, F, D2]]
-function scheduleListOfSchedules(listOfSchedules, sections) {
-    if (listOfSchedules.length == 0) {
-        // => [[D1], [D2], [D3]]
-        return sections.map(section => [section])
+// [Schedule], [Section] -> [Schedule]
+// [[A, B, C], [D, E, F]], [D1, D2, D3] -> [[A, B, C, D1], [A, B, C, D2], ..., [D, E, F, D2]]
+function scheduleListOfSchedule(listOfSchedule, listOfSection) {
+    if (listOfSchedule.length == 0) {
+        return listOfSection.map(section => [section]) // [Section] -> [Schedule]
     }
-    return listOfSchedules.flatMap(schedule => possibleSchedules(schedule, sections))
+    return listOfSchedule.flatMap(schedule => possibleSchedules(schedule, listOfSection))
 }
 
-function scheduleLabsTuts(schedules) {
+// [Schedule] -> [Schedule]
+function scheduleLabsTuts(listOfSchedule) {
     // for each schedule
     // generate a fuck ton of subschedules
     // then keep going until there are none left
-    return schedules.flatMap(function (schedule) {
-        listOfSections = schedule.flatMap(function (section) {
+    return listOfSchedule.flatMap(function (schedule) {
+        listOfSubactivity = schedule.flatMap(function (section) {
             return Object.values(section.subactivities)
         })
 
-        return scheduleListOfSections(listOfSections, [schedule])
+        return scheduleListOfSubactivity(listOfSubactivity, [schedule])
     })
 }
 
-// => [Schedule]
-function scheduleListOfSections(listOfSections, listOfSchedules) {
-    if (listOfSections.length == 0) {
-        return listOfSchedules
+// [Subactivity] [Schedule] -> [Schedule]
+function scheduleListOfSubactivity(listOfSubactivity, listOfSchedule) {
+    if (listOfSubactivity.length == 0) {
+        return listOfSchedule
     }
-    let sections = listOfSections.pop()
-    return scheduleListOfSections(listOfSections, scheduleListOfSchedules(listOfSchedules, sections))
+    let listOfSection = listOfSubactivity.pop()
+    return scheduleListOfSubactivity(listOfSubactivity, scheduleListOfSchedule(listOfSchedule, listOfSection))
 }
 
+// Schedule, [Section] -> [Schedule]
 // [A, B, C], [D1 D2 D3] => [[A, B, C, D1], [A, B, C, D2], ...]
-function possibleSchedules(schedule, sections) {
-    return sections.filter(function (section) {
+function possibleSchedules(schedule, listOfSection) {
+    return listOfSection.filter(function (section) {
         return fitsInSchedule(section, schedule)
     }).map(function (section) {
         return schedule.concat(section)
     })
 }
 
-function fitsInSchedule(section, schedule) {
-    for (otherSection of schedule) {
-        for (otherTime of otherSection.times) {
-            for (time of section.times) {
+// Section, Schedule -> Boolean
+function fitsInSchedule(sectionA, schedule) {
+    for (sectionB of schedule) {
+        for (timeB of sectionB.times) {
+            for (timeA of sectionA.times) {
                 // false if same day and same time
-                if (time.days & otherTime.days && timeCollides(time.beginTime, time.endTime, otherTime.beginTime, otherTime.endTime)) {
-                    return false
-                }
+                return !(timeA.days & timeB.days &&
+                    timeCollides(timeA.beginTime, timeA.endTime, timeB.beginTime, timeB.endTime))
             }
         }
     }
     return true
 }
 
+// LocalTime, LocalTime, LocalTime, LocalTime -> Boolean
 function timeCollides(startA, endA, startB, endB) {
     return endB.isAfter(startA) && endA.isAfter(startB)
 }
 
+// Schedule -> Schedule
+// Converts Schedule to a new format easier for timetabling, final step
 function convertSchedule(schedule) {
     function convertSection(section) {
         return section.times.map(function (time) {
-            return { 
-                courseName: section.section.trim(), 
-                status: section.status, 
-                days: time.days, beginTime: 
-                time.beginTime, 
-                endTime: time.endTime 
+            return {
+                courseName: section.section.trim(),
+                status: section.status,
+                days: time.days,
+                beginTime: time.beginTime,
+                endTime: time.endTime
             }
         })
     }

@@ -7,44 +7,15 @@ var lockedSections = []
 var currPage = 1
 
 function setup() {
-    $('#coursesTable').on('click', '.delete', function () {
-        let text = $(this).parents('tr').children('th').text()
-        courses = courses.filter(function (course) {
-            return course.courseName !== text
-        })
-        $(this).parents('tr').remove();
-        if (courses.length == 0) {
-            lockSectionAndTerm(false)
-        }
-    });
-
-    $('#timetable').on('click', '#courseBlock', function () {
-        let sectionName = $(this).html().split("<br>")[0]
-        if ($(this).hasClass("course-locked")) {
-            lockedSections = lockedSections.filter(item => item !== sectionName)
-        } else {
-            lockedSections.push(sectionName)
-        }
-        let currentSchedule = filteredSchedules[currPage - 1]
-        filteredSchedules = schedules.filter(function (schedule) {
-            if (lockedSections.length == 0) return true
-            let courseNames = schedule.map(section => section.courseName)
-            return lockedSections.every(lockedSection => courseNames.includes(lockedSection))
-        })
-        currPage = filteredSchedules.indexOf(currentSchedule) + 1
-        updatePaginationTimetable(currPage - 1)
-    })
-
+    
+    $('#coursesTable').on('click', '.delete', removeCourse)
+    $('#timetable').on('click', '#courseBlock', lockSection)
     $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
         totalPages: 1
     }))
+
     loadSessions()
     schedule()
-    // debugSetup()
-}
-
-function debugSetup() {
-    addCourseToTable("CPSC 121", [])
 }
 
 function loadSessions() {
@@ -56,50 +27,6 @@ function loadSessions() {
         });
         dropdown.val(sessions[0]);
     })
-}
-
-function loadTimetable(schedule) {
-    var timetable = $("#timetable > tbody")
-    timetable.empty()
-
-    // Generate times
-    let endTime = LocalTime.parse('21:00')
-    let times = []
-    for (let i = LocalTime.parse('08:00'); !i.isAfter(endTime); i = i.plusMinutes(30)) {
-        times.push(i)
-    }
-
-    // Generate row headers
-    let formatter = JSJoda.DateTimeFormatter.ofPattern('kk:mm')
-    for (time of times) {
-        row = $("<tr></tr>")
-        row.append($(`<th scope=\"row\">${time.format(formatter)}</th>`))
-        timetable.append(row)
-    }
-
-    // Generate each column
-    for (let i = 0; i < 5; i++) {
-        let currWeekday = 1 << i
-        // Generate each cell
-        for (let j = 0; j < times.length; j++) {
-            row = timetable.children().eq(j)
-            time = times[j]
-            filteredSchedule = schedule.filter(function (item) {
-                return (item.days & currWeekday) == currWeekday && time.isBefore(item.endTime) && !item.beginTime.isAfter(time)
-            }) // Should result in one course or no course
-            if (filteredSchedule.length == 0) {
-                row.append($('<td></td>'))
-                continue
-            }
-            let filteredCourse = filteredSchedule[0]
-            if (time.equals(filteredCourse.beginTime)) {
-                let duration = filteredCourse.beginTime.until(filteredCourse.endTime, JSJoda.ChronoUnit.MINUTES)
-                cell = $(`<td rowspan="${duration / 30}" id="courseBlock">${filteredCourse.courseName}<br>${filteredCourse.status}</td>`)
-                if (lockedSections.includes(filteredCourse.courseName)) cell.addClass("course-locked")
-                row.append(cell)
-            }
-        }
-    }
 }
 
 function addCourse() {
@@ -159,16 +86,6 @@ function lockSectionAndTerm(locked) {
     } else {
         $("#timetableLabel").text("Timetable")
     }
-}
-
-function addCourseToTable(courseName, sections) {
-    courses.push({ courseName: courseName, sections: sections })
-    var courseTable = $("#coursesTable > tbody")
-    row = $("<tr></tr>")
-    // TODO: Change this to dropdown allowing locking course sections
-    row.append($(`<th scope=\"row\">${courseName}</th>`))
-    row.append($("<td><button type=\"submit\" class=\"btn btn-danger btn-sm delete\">Remove</button></td>"))
-    courseTable.append(row)
 }
 
 function addEmptyBlock() {
@@ -242,38 +159,19 @@ function schedule() {
     window.requestAnimationFrame(fn)
 }
 
-function updatePaginationTimetable(index) {
-    $('#schedule-pagination').twbsPagination("destroy");
-    if (filteredSchedules.length) {
-        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
-            totalPages: filteredSchedules.length,
-            startPage: index + 1
-        }))
-        if (filteredSchedules.length > 1) {
-            $("#pageJumper").show()
-        } else {
-            $("#pageJumper").hide()
-        }
-        loadTimetable(filteredSchedules[index])
+function lockSection() {
+    let sectionName = $(this).html().split("<br>")[0]
+    if ($(this).hasClass("course-locked")) {
+        lockedSections = lockedSections.filter(item => item !== sectionName)
     } else {
-        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
-            totalPages: 1,
-            startPage: 1
-        }))
-        $("#pageJumper").hide()
-        loadTimetable(filteredSchedules)
-        if (courses.length != 0) {
-            alert("No timetable could be generated with these courses.")
-        }
+        lockedSections.push(sectionName)
     }
-}
-
-function jumpToPage() {
-    let pageInput = $("#inputPage").val()
-    let page = 1
-    if (pageInput) {
-        page = Math.max(Math.min(parseInt(pageInput), filteredSchedules.length), 1)
-    }
-    currPage = page
-    updatePaginationTimetable(page - 1)
+    let currentSchedule = filteredSchedules[currPage - 1]
+    filteredSchedules = schedules.filter(function (schedule) {
+        if (lockedSections.length == 0) return true
+        let courseNames = schedule.map(section => section.courseName)
+        return lockedSections.every(lockedSection => courseNames.includes(lockedSection))
+    })
+    currPage = filteredSchedules.indexOf(currentSchedule) + 1
+    updatePaginationTimetable(currPage - 1)
 }
