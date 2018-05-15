@@ -98,7 +98,7 @@ function parseSections(campus, year, session, subject, course, term, completion)
             sections.push({ status: status, sectionName: sectionName, activity: activity, times: [] })
             return // Ignore terms that do not apply but take note
         }
-        if (section === "") {
+        if (sectionName === "") {
             sections[sections.length - 1].times.push({
                 days: days,
                 beginTime: beginTime,
