@@ -14,7 +14,7 @@ function addCourseToTable(courseName, sections) {
     let row = $("<tr></tr>")
     // TODO: Change this to dropdown allowing locking course sections
     row.append($(`<th scope=\"row\">${courseName}</th>`))
-    row.append($("<td><button type=\"submit\" class=\"btn btn-danger btn-sm delete\">Remove</button></td>"))
+    row.append($("<td align='right'><button class='btn btn-danger btn-sm delete'>Remove</button></td>"))
     courseTable.append(row)
 }
 
@@ -27,4 +27,10 @@ function removeCourse() {
     if (courses.length == 0) {
         lockSectionAndTerm(false)
     }
+}
+
+function removeAll() {
+    $("#coursesTable > tbody").empty();
+    courses = []
+    lockSectionAndTerm(false)
 }

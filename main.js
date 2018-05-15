@@ -14,7 +14,7 @@ var currPage = 1
 
 function setup() {
 
-    $('#coursesTable').on('click', '.delete', removeCourse)
+    $('#coursesTable > tbody').on('click', '.delete', removeCourse)
     $('#timetable').on('click', '#courseBlock', lockSection)
     $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
         totalPages: 1
