@@ -111,6 +111,7 @@ function addCourse() {
         return
     }
 
+    let campus = $("#inputCampus").val()
     let courseName = $("#inputCourse").val().toUpperCase()
     let term = $("#inputTerm").val()
     let regex = /([A-Z]{4})\s?(\w+)/
@@ -134,7 +135,7 @@ function addCourse() {
     $("#buttonAdd").attr("disabled", true);
     $("#buttonAdd").text("Adding...")
     lockSectionAndTerm(true)
-    parseSections(year, session, subject, course, term, function (sections) {
+    parseSections(campus, year, session, subject, course, term, function (sections) {
         if (!sections) {
             if (courses.length == 0) {
                 lockSectionAndTerm(false)
@@ -150,6 +151,7 @@ function addCourse() {
 }
 
 function lockSectionAndTerm(locked) {
+    $("#inputCampus").attr("disabled", locked);
     $("#inputSession").attr("disabled", locked);
     $("#inputTerm").attr("disabled", locked);
     if (locked) {
@@ -247,7 +249,11 @@ function updatePaginationTimetable(index) {
             totalPages: filteredSchedules.length,
             startPage: index + 1
         }))
-        $("#pageJumper").show()
+        if (filteredSchedules.length > 1) {
+            $("#pageJumper").show()
+        } else {
+            $("#pageJumper").hide()
+        }
         loadTimetable(filteredSchedules[index])
     } else {
         $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {

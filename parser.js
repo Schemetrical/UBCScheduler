@@ -13,7 +13,7 @@ function parseSessions(completion) {
     $.ajax({ url: 'https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main', success: parse });
 }
 
-function parseSections(year, session, subject, course, term, completion) {
+function parseSections(campus, year, session, subject, course, term, completion) {
     function parse(data) {
         var sections = []
 
@@ -114,5 +114,5 @@ function parseSections(year, session, subject, course, term, completion) {
         }
     }
 
-    $.ajax({ url: `https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`, success: parse });
+    $.ajax({ url: `https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&campuscd=${campus}&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`, success: parse });
 }
