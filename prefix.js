@@ -24,6 +24,7 @@ let defaultOptions = {
     next: "→",
     startPage: 1,
     onPageClick: function (event, page) {
-        loadTimetable(schedules[page - 1])
+        currPage = page
+        loadTimetable(filteredSchedules[page - 1])
     }
 }

@@ -8,3 +8,11 @@
     width: 18%; 
     font-size: 0.8em
 }
+
+#courseBlock {
+    background-color:lightgray
+}
+
+#courseBlock.course-locked {
+    background-color:lightgreen
+}

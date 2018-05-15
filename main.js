@@ -2,6 +2,9 @@ window.onload = setup
 var courses = []
 var currBlock = 1
 var schedules = []
+var filteredSchedules = []
+var lockedSections = []
+var currPage = 1
 
 function setup() {
     $('#coursesTable').on('click', '.delete', function () {
@@ -14,6 +17,23 @@ function setup() {
             lockSectionAndTerm(false)
         }
     });
+
+    $('#timetable').on('click', '#courseBlock', function () {
+        let sectionName = $(this).html().split("<br>")[0]
+        if ($(this).hasClass("course-locked")) {
+            lockedSections = lockedSections.filter(item => item !== sectionName)
+        } else {
+            lockedSections.push(sectionName)
+        }
+        let currentSchedule = filteredSchedules[currPage - 1]
+        filteredSchedules = schedules.filter(function (schedule) {
+            if (lockedSections.length == 0) return true
+            let courseNames = schedule.map(section => section.courseName)
+            return lockedSections.every(lockedSection => courseNames.includes(lockedSection))
+        })
+        currPage = filteredSchedules.indexOf(currentSchedule) + 1
+        updatePaginationTimetable(currPage - 1)
+    })
 
     $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
         totalPages: 1
@@ -74,7 +94,9 @@ function loadTimetable(schedule) {
             let filteredCourse = filteredSchedule[0]
             if (time.equals(filteredCourse.beginTime)) {
                 let duration = filteredCourse.beginTime.until(filteredCourse.endTime, JSJoda.ChronoUnit.MINUTES)
-                row.append($(`<td rowspan="${duration / 30}" style="background-color:lightgray">${filteredCourse.courseName}<br>${filteredCourse.status}</td>`))
+                cell = $(`<td rowspan="${duration / 30}" id="courseBlock">${filteredCourse.courseName}<br>${filteredCourse.status}</td>`)
+                if (lockedSections.includes(filteredCourse.courseName)) cell.addClass("course-locked")
+                row.append(cell)
             }
         }
     }
@@ -205,26 +227,35 @@ function noDeathPls() {
 function schedule() {
     $("#schedule").attr("disabled", true);
     $("#schedule").text("Scheduling...")
+    lockedSections = []
+    currPage = 1
     
     var fn = scheduleTimetable.bind(this, courses.slice(0), function (newSchedules) {// schedule using a shallow copy
         schedules = newSchedules
-        $('#schedule-pagination').twbsPagination("destroy");
-        if (schedules.length) {
-            $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
-                totalPages: schedules.length
-            }))
-            loadTimetable(schedules[0])
-        } else {
-            $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
-                totalPages: 1
-            }))
-            loadTimetable(schedules)
-            if (courses.length != 0) {
-                alert("No timetable could be generated with these courses.")
-            }
-        }
+        filteredSchedules = schedules
+        updatePaginationTimetable(0)
         $("#schedule").attr("disabled", false);
         $("#schedule").text("Schedule")
     })
     window.requestAnimationFrame(fn)
+}
+
+function updatePaginationTimetable(index) {
+    $('#schedule-pagination').twbsPagination("destroy");
+    if (filteredSchedules.length) {
+        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+            totalPages: filteredSchedules.length,
+            startPage: index + 1
+        }))
+        loadTimetable(filteredSchedules[index])
+    } else {
+        $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
+            totalPages: 1,
+            startPage: 1
+        }))
+        loadTimetable(filteredSchedules)
+        if (courses.length != 0) {
+            alert("No timetable could be generated with these courses.")
+        }
+    }
 }
