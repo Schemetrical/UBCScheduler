@@ -1,3 +1,7 @@
+/**
+ * Updates the pagination with new selected index and reloads the timetable
+ * @param {number} index 
+ */
 function updatePaginationTimetable(index) {
     $('#schedule-pagination').twbsPagination("destroy");
     if (filteredSchedules.length) {
@@ -34,6 +38,10 @@ function jumpToPage() {
     updatePaginationTimetable(page - 1)
 }
 
+/**
+ * Loads the selected schedule into the graphical timetable
+ * @param {Schedule} schedule 
+ */
 function loadTimetable(schedule) {
     var timetable = $("#timetable > tbody")
     timetable.empty()
@@ -70,8 +78,8 @@ function loadTimetable(schedule) {
             let filteredCourse = filteredSchedule[0]
             if (time.equals(filteredCourse.beginTime)) {
                 let duration = filteredCourse.beginTime.until(filteredCourse.endTime, JSJoda.ChronoUnit.MINUTES)
-                cell = $(`<td rowspan="${duration / 30}" id="courseBlock">${filteredCourse.courseName}<br>${filteredCourse.status}</td>`)
-                if (lockedSections.includes(filteredCourse.courseName)) cell.addClass("course-locked")
+                cell = $(`<td rowspan="${duration / 30}" id="courseBlock">${filteredCourse.sectionName}<br>${filteredCourse.status}</td>`)
+                if (lockedSections.includes(filteredCourse.sectionName)) cell.addClass("course-locked")
                 row.append(cell)
             }
         }

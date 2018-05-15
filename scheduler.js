@@ -1,8 +1,18 @@
-// Time is {days, beginTime, endTime}
-// Course is {courseName, sections}
-// Section is {sectionName, times:[Time], subactivities:[Subactivity]}
-// Schedule is [Section]
-// Subactivity is [Section]
+/**
+ * A schedule, as a list of sections or list of section fragments
+ * @typedef {Section[]|SectionFragment[]} Schedule
+ */
+
+/**
+ * A part of a section, there can be one or many representing one section depending
+ * on the complexity of the time block.
+ * @typedef {Object} SectionFragment
+ * @property {string} sectionName
+ * @property {string} status
+ * @property {number} days
+ * @property {Time} beginTime
+ * @property {Time} endTime
+ */
 
 // Generate schedules using **generative recursion**
 function scheduleTimetable(courses, callback) {
@@ -11,7 +21,10 @@ function scheduleTimetable(courses, callback) {
     callback(schedules.map(convertSchedule))
 }
 
-// [Course] -> [Schedule]
+/**
+ * @param {Course[]} listOfCourse 
+ * @returns {Schedule[]}
+ */
 function scheduleListOfCourse(listOfCourse) {
     if (listOfCourse.length == 0) {
         return []
@@ -21,8 +34,12 @@ function scheduleListOfCourse(listOfCourse) {
     return scheduleListOfSchedule(listOfSchedules, course.sections)
 }
 
-// [Schedule], [Section] -> [Schedule]
 // [[A, B, C], [D, E, F]], [D1, D2, D3] -> [[A, B, C, D1], [A, B, C, D2], ..., [D, E, F, D2]]
+/**
+ * @param {Schedule[]} listOfSchedule 
+ * @param {Section[]} listOfSection 
+ * @returns {Schedule[]}
+ */
 function scheduleListOfSchedule(listOfSchedule, listOfSection) {
     if (listOfSchedule.length == 0) {
         return listOfSection.map(section => [section]) // [Section] -> [Schedule]
@@ -30,7 +47,11 @@ function scheduleListOfSchedule(listOfSchedule, listOfSection) {
     return listOfSchedule.flatMap(schedule => possibleSchedules(schedule, listOfSection))
 }
 
-// [Schedule] -> [Schedule]
+/**
+ * For each schedule, take each section's subactivities and use generative recursion to add to schedule
+ * @param {Schedule[]} listOfSchedule 
+ * @returns {Schedule[]}
+ */
 function scheduleLabsTuts(listOfSchedule) {
     // for each schedule
     // generate a fuck ton of subschedules
@@ -44,7 +65,12 @@ function scheduleLabsTuts(listOfSchedule) {
     })
 }
 
-// [Subactivity] [Schedule] -> [Schedule]
+/**
+ * Find the cross product of both lists
+ * @param {Subactivity[]} listOfSubactivity 
+ * @param {Schedule[]} listOfSchedule 
+ * @returns {Schedule[]}
+ */
 function scheduleListOfSubactivity(listOfSubactivity, listOfSchedule) {
     if (listOfSubactivity.length == 0) {
         return listOfSchedule
@@ -53,8 +79,13 @@ function scheduleListOfSubactivity(listOfSubactivity, listOfSchedule) {
     return scheduleListOfSubactivity(listOfSubactivity, scheduleListOfSchedule(listOfSchedule, listOfSection))
 }
 
-// Schedule, [Section] -> [Schedule]
 // [A, B, C], [D1 D2 D3] => [[A, B, C, D1], [A, B, C, D2], ...]
+/**
+ * Generate list of schedules by adding one of section onto each schedule
+ * @param {Schedule} schedule 
+ * @param {Section[]} listOfSection 
+ * @returns {Schedule[]}
+ */
 function possibleSchedules(schedule, listOfSection) {
     return listOfSection.filter(function (section) {
         return fitsInSchedule(section, schedule)
@@ -63,7 +94,12 @@ function possibleSchedules(schedule, listOfSection) {
     })
 }
 
-// Section, Schedule -> Boolean
+/**
+ * Returns whether section fits in schedule
+ * @param {Section} sectionA 
+ * @param {Schedule} schedule 
+ * @returns {boolean}
+ */
 function fitsInSchedule(sectionA, schedule) {
     for (sectionB of schedule) {
         for (timeB of sectionB.times) {
@@ -77,18 +113,28 @@ function fitsInSchedule(sectionA, schedule) {
     return true
 }
 
-// LocalTime, LocalTime, LocalTime, LocalTime -> Boolean
+/**
+ * Returns whether these start and end times collide
+ * @param {LocalTime} startA 
+ * @param {LocalTime} endA 
+ * @param {LocalTime} startB 
+ * @param {LocalTime} endB 
+ * @returns {boolean}
+ */
 function timeCollides(startA, endA, startB, endB) {
     return endB.isAfter(startA) && endA.isAfter(startB)
 }
 
-// Schedule -> Schedule
-// Converts Schedule to a new format easier for timetabling, final step
+/**
+ * Converts Schedule to a new format easier for timetabling, final step
+ * @param {Schedule} schedule 
+ * @returns {Schedule} 
+ */
 function convertSchedule(schedule) {
     function convertSection(section) {
         return section.times.map(function (time) {
             return {
-                courseName: section.section.trim(),
+                sectionName: section.sectionName,
                 status: section.status,
                 days: time.days,
                 beginTime: time.beginTime,

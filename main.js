@@ -1,13 +1,19 @@
 window.onload = setup
+/** @type {Course[]} */
 var courses = []
+/** @type {number} */
 var currBlock = 1
+/** @type {Schedule[]} */
 var schedules = []
+/** @type {Schedule[]} */
 var filteredSchedules = []
+/** @type {string[]} */
 var lockedSections = []
+/** @type {number} */
 var currPage = 1
 
 function setup() {
-    
+
     $('#coursesTable').on('click', '.delete', removeCourse)
     $('#timetable').on('click', '#courseBlock', lockSection)
     $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
@@ -52,7 +58,7 @@ function addCourse() {
     let subject = match[1]
     let course = match[2]
     courseName = subject + " " + course
-    if (courses.filter(function (item) { return item.courseName === courseName }).length > 0) {
+    if (courses.filter(function (course) { return course.courseName === courseName }).length > 0) {
         alert("This course has already been added.")
         return
     }
@@ -119,7 +125,7 @@ function addEmptyBlock() {
     }
 
     addCourseToTable("Block " + currBlock, [{
-        status: "", section: "Block " + currBlock, activity: "", subactivities:{}, times: [{
+        status: "", section: "Block " + currBlock, activity: "", subactivities: {}, times: [{
             days: weekdayMask,
             beginTime: LocalTime.parse(beginTime),
             endTime: LocalTime.parse(endTime)
@@ -130,12 +136,12 @@ function addEmptyBlock() {
 
 function noDeathPls() {
     let courseName = "No 8am"
-    if (courses.filter(item => item.courseName === courseName).length > 0) {
+    if (courses.filter(course => course.courseName === courseName).length > 0) {
         alert("You have already chosen to sleep in.")
         return
     }
     addCourseToTable(courseName, [{
-        status: "", section: courseName, activity: "", subactivities:{}, times: [{
+        status: "", section: courseName, activity: "", subactivities: {}, times: [{
             days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,
             beginTime: LocalTime.parse("08:00"),
             endTime: LocalTime.parse("09:00")
@@ -148,7 +154,7 @@ function schedule() {
     $("#schedule").text("Scheduling...")
     lockedSections = []
     currPage = 1
-    
+
     var fn = scheduleTimetable.bind(this, courses.slice(0), function (newSchedules) {// schedule using a shallow copy
         schedules = newSchedules
         filteredSchedules = schedules
@@ -169,7 +175,7 @@ function lockSection() {
     let currentSchedule = filteredSchedules[currPage - 1]
     filteredSchedules = schedules.filter(function (schedule) {
         if (lockedSections.length == 0) return true
-        let courseNames = schedule.map(section => section.courseName)
+        let courseNames = schedule.map(section => section.sectionName)
         return lockedSections.every(lockedSection => courseNames.includes(lockedSection))
     })
     currPage = filteredSchedules.indexOf(currentSchedule) + 1

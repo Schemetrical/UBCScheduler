@@ -1,3 +1,36 @@
+/**
+ * A particular section of a course
+ * @typedef {Object} Section
+ * @property {string} status
+ * @property {string} sectionName
+ * @property {string} activity
+ * @property {Time} times
+ * @property {boolean} subactivities
+ */
+
+/**
+ * Time blocks defined by start and end times in particular days
+ * @typedef {Object} Time
+ * @property {number} days
+ * @property {LocalTime} beginTime
+ * @property {LocalTime} endTime
+ */
+
+/**
+ * Subactivities of a Lecture such as Laboratory or Tutorial. When there is no Lecture,
+ * the next available item (Laboratory or Tutorial) is chosen as the main activity and
+ * the item after it is the subactivity.
+ * @typedef {Object.<string, Section[]>} Subactivities
+ */
+
+/**
+ * @callback sessionsCallback
+ * @param {string[]} sessions
+ */
+
+/**
+ * @param {sessionsCallback} completion
+ */
 function parseSessions(completion) {
     function parse(data) {
         var sessions = []
@@ -13,6 +46,21 @@ function parseSessions(completion) {
     $.ajax({ url: 'https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main', success: parse });
 }
 
+/**
+ * @callback sesctionsCallback
+ * @param {Section[]} sections
+ */
+
+/**
+ * 
+ * @param {string} campus 
+ * @param {string} year 
+ * @param {string} session 
+ * @param {string} subject 
+ * @param {string} course 
+ * @param {string} term 
+ * @param {sesctionsCallback} completion 
+ */
 function parseSections(campus, year, session, subject, course, term, completion) {
     function parse(data) {
         var sections = []
@@ -21,19 +69,24 @@ function parseSections(campus, year, session, subject, course, term, completion)
         try {
             var doc = $($.parseHTML(data))
             var rows = doc.find('.section-summary')[0].children[1].children
-    
+
             for (let row of rows) {
                 parseRow(row, sections)
             }
         } catch (err) {
+            console.log(err)
         }
         completion(postprocessSections(sections))
     }
 
+    /**
+     * @param {*} row 
+     * @param {Section[]} sections 
+     */
     function parseRow(row, sections) {
         let items = row.children
         let status = $(items[0]).text()
-        let section = $(items[1]).text()
+        let sectionName = $(items[1]).text().trim()
         let activity = $(items[2]).text()
         let courseTerm = $(items[3]).text()
         // let interval = $(items[4]).text()
@@ -42,7 +95,7 @@ function parseSections(campus, year, session, subject, course, term, completion)
         let endTime = preprocessTime($(items[7]).text())
         // let comments = $(items[8]).text()
         if (courseTerm !== term && courseTerm !== "1-2") {
-            sections.push({ status: status, section: section, activity: activity, times: [] })
+            sections.push({ status: status, sectionName: sectionName, activity: activity, times: [] })
             return // Ignore terms that do not apply but take note
         }
         if (section === "") {
@@ -54,7 +107,7 @@ function parseSections(campus, year, session, subject, course, term, completion)
             return
         }
         sections.push({
-            status: status, section: section, activity: activity, times: [{
+            status: status, sectionName: sectionName, activity: activity, times: [{
                 days: days,
                 beginTime: beginTime,
                 endTime: endTime
@@ -62,6 +115,11 @@ function parseSections(campus, year, session, subject, course, term, completion)
         })
     }
 
+    /**
+     * Converts weekday string to mask
+     * @param {string} weekdayString 
+     * @returns {number}
+     */
     function parseWeekdays(weekdayString) {
         let weekdayMask = Weekday.None
         let days = weekdayString.split(" ")
@@ -75,13 +133,17 @@ function parseSections(campus, year, session, subject, course, term, completion)
         return weekdayMask
     }
 
+    /**
+     * @param {Section[]} sections 
+     * @returns {Section[]}
+     */
     function postprocessSections(sections) {
         sections = sections.filter(function (section) {
             // filter out all sections with no times or waitlist
-            return (section.times.length > 0 && 
-                section.activity !== "Waiting List" && 
-                section.times[0].days != Weekday.None && 
-                section.times[0].beginTime !== "" && 
+            return (section.times.length > 0 &&
+                section.activity !== "Waiting List" &&
+                section.times[0].days != Weekday.None &&
+                section.times[0].beginTime !== "" &&
                 section.times[0].endTime !== "")
         })
         if (sections.length <= 0) return
@@ -103,6 +165,10 @@ function parseSections(campus, year, session, subject, course, term, completion)
         return newSections
     }
 
+    /**
+     * @param {string} time 
+     * @returns {LocalTime}
+     */
     function preprocessTime(time) {
         if (time.length < 4) {
             // invalid time
