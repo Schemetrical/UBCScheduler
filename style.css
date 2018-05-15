@@ -10,9 +10,23 @@
 }
 
 #courseBlock {
-    background-color:lightgray
+    background-color:lightgray;
+    cursor: pointer
 }
 
 #courseBlock.course-locked {
     background-color:lightgreen
+}
+
+.pagination > .active {
+    flex: 1 1 auto;
+    background-color: white
+}
+
+.pagination > .active > .page-link {
+    color: #495057;
+    background-color: transparent;
+    border-color: #dee2e6;
+    cursor: default;
+    text-align: center
 }

@@ -247,15 +247,27 @@ function updatePaginationTimetable(index) {
             totalPages: filteredSchedules.length,
             startPage: index + 1
         }))
+        $("#pageJumper").show()
         loadTimetable(filteredSchedules[index])
     } else {
         $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
             totalPages: 1,
             startPage: 1
         }))
+        $("#pageJumper").hide()
         loadTimetable(filteredSchedules)
         if (courses.length != 0) {
             alert("No timetable could be generated with these courses.")
         }
     }
+}
+
+function jumpToPage() {
+    let pageInput = $("#inputPage").val()
+    let page = 1
+    if (pageInput) {
+        page = Math.max(Math.min(parseInt(pageInput), filteredSchedules.length), 1)
+    }
+    currPage = page
+    updatePaginationTimetable(page - 1)
 }

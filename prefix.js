@@ -17,12 +17,13 @@ Array.prototype.flatMap = function (f) { // why does this not exist by default i
     return flatMap(f, this)
 }
 let defaultOptions = {
-    visiblePages: 3,
+    visiblePages: 1,
     first: "⇤",
     last: "⇥",
     prev: "←",
     next: "→",
     startPage: 1,
+    page: '{{page}} of {{total_pages}}',
     onPageClick: function (event, page) {
         currPage = page
         loadTimetable(filteredSchedules[page - 1])
