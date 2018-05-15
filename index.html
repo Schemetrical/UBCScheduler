@@ -11,6 +11,16 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119260652-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-119260652-1');
+    </script>
+
     <title>UBC Course Scheduler</title>
 </head>
 
@@ -43,7 +53,9 @@
     <div class="container">
         <div class="title">
             <h1>UBC Course Scheduler</h1>
-            <p class="lead">Automatically generates all possible schedules from your courses. Send issues or feature requests <a href="https://github.com/Schemetrical/UBCScheduler/issues" target="_blank">here</a>. </p>
+            <p class="lead">Automatically generates all possible schedules from your courses. Send issues or feature requests
+                <a href="https://github.com/Schemetrical/UBCScheduler/issues"
+                    target="_blank">here</a>. </p>
         </div>
         <div class="row">
             <div class="col-lg-3">
@@ -71,7 +83,8 @@
                     <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" required>
                 </div>
                 <button type='button' class="btn btn-primary" onclick="addCourse()" id="buttonAdd">Add Course</button>
-                <br><br>
+                <br>
+                <br>
 
 
                 <h5>2. Optionally add restrictions</h5>
@@ -98,12 +111,14 @@
                 </div>
                 <button type='button' class="btn btn-primary" onclick="addEmptyBlock()" id="buttonAddEmptyBlock">Add Restriction</button>
                 <button type='button' class="btn btn-light" onclick="noDeathPls()" id="buttonAddNo8AM">No 8am</button>
-                <br><br>
+                <br>
+                <br>
 
 
                 <h5>3. Generate schedules!</h5>
                 <button type="button" class="btn btn-primary" onclick="schedule()" id="schedule">Schedule</button>
-                <br><br>
+                <br>
+                <br>
                 <h5>4. Click on a timeblock to lock it.</h5>
             </div>
 
@@ -129,7 +144,8 @@
                     </div>
                 </div>
                 <br>
-                <ul id="schedule-pagination" class="pagination"></ul> <!-- TODO: make pagination responsive -->
+                <ul id="schedule-pagination" class="pagination"></ul>
+                <!-- TODO: make pagination responsive -->
             </div>
 
             <!-- COLUMN 3 -->
