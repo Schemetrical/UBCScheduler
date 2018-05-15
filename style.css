@@ -10,12 +10,15 @@
 }
 
 #courseBlock {
-    background-color:lightgray;
-    cursor: pointer
+    cursor: pointer;
+    color: #495057;
+    background-color: #e9ecef;
+    /* border-radius: .5rem; */
 }
 
 #courseBlock.course-locked {
-    background-color:lightgreen
+    color: white;
+    background-color: #28a745
 }
 
 .pagination > .active {
