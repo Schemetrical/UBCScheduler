@@ -36,7 +36,7 @@ function addCourse() {
     let campus = $("#inputCampus").val()
     let courseName = $("#inputCourse").val().toUpperCase()
     let term = $("#inputTerm").val()
-    let regex = /([A-Z]{4})\s?(\w+)/
+    let regex = /([A-Z]{3,4})\s?(\w+)/
     let match = regex.exec(courseName)
 
     // TODO: Need error handling here
