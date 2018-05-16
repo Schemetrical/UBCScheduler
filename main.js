@@ -125,7 +125,7 @@ function noDeathPls() {
         alert("You have already chosen to sleep in.")
         return
     }
-    ga('send', 'event', 'Courselist', 'no8am');
+    // ga('send', 'event', 'Courselist', 'no8am');
     addCourseToTable(courseName, [{
         status: "", sectionName: courseName, activity: "", subactivities: {}, times: [{
             days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,
@@ -140,7 +140,7 @@ function schedule() {
     $("#schedule").text("Scheduling...")
     lockedSections = []
     currPage = 1
-    ga('send', 'event', 'Timetable', 'schedule', $("#inputCampus").val());
+    // ga('send', 'event', 'Timetable', 'schedule', $("#inputCampus").val());
 
     var fn = scheduleTimetable.bind(this, courses.slice(0), function (newSchedules) {// schedule using a shallow copy
         schedules = newSchedules
@@ -167,4 +167,22 @@ function lockSection() {
     })
     currPage = filteredSchedules.indexOf(currentSchedule) + 1
     updatePaginationTimetable(currPage - 1)
+}
+
+function checkSubmitCourse(e) {
+    if (e && e.keyCode == 13) {
+        addCourse()
+    }
+}
+
+function checkSubmitBlock(e) {
+    if (e && e.keyCode == 13) {
+        addEmptyBlock()
+    }
+}
+
+function checkSubmitJump(e) {
+    if (e && e.keyCode == 13) {
+        jumpToPage()
+    }
 }

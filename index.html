@@ -90,7 +90,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" for="inputCourse">Course</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" required>
+                    <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" onkeyup="return checkSubmitCourse(event)" required>
                 </div>
                 <button type='button' class="btn btn-primary" onclick="addCourse()" id="buttonAdd">Add Course</button>
                 <br>
@@ -117,7 +117,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" for="inputEndTime">End</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="09:00" id="inputEndTime" required>
+                    <input type="text" class="form-control" placeholder="09:00" id="inputEndTime" onkeyup="return checkSubmitBlock(event)" required>
                 </div>
                 <button type='button' class="btn btn-primary" onclick="addEmptyBlock()" id="buttonAddEmptyBlock">Add Restriction</button>
                 <button type='button' class="btn btn-light" onclick="noDeathPls()" id="buttonAddNo8AM">No 8am</button>
@@ -161,7 +161,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="inputPage">Jump to page</label>
                     </div>
-                    <input type="number" class="form-control" placeholder="1" id="inputPage" required>
+                    <input type="number" class="form-control" placeholder="1" id="inputPage" onkeyup="return checkSubmitJump(event)" required>
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="button" onclick="jumpToPage()">Jump</button>
                     </div>
