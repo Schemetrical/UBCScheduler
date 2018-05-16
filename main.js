@@ -1,16 +1,6 @@
 window.onload = setup
-/** @type {Course[]} */
-var courses = []
 /** @type {number} */
 var currBlock = 1
-/** @type {Schedule[]} */
-var schedules = []
-/** @type {Schedule[]} */
-var filteredSchedules = []
-/** @type {string[]} */
-var lockedSections = []
-/** @type {number} */
-var currPage = 1
 
 function setup() {
 
@@ -125,7 +115,7 @@ function addEmptyBlock() {
     }
 
     addCourseToTable("Block " + currBlock, [{
-        status: "", section: "Block " + currBlock, activity: "", subactivities: {}, times: [{
+        status: "", sectionName: "Block " + currBlock, activity: "", subactivities: {}, times: [{
             days: weekdayMask,
             beginTime: LocalTime.parse(beginTime),
             endTime: LocalTime.parse(endTime)
@@ -141,7 +131,7 @@ function noDeathPls() {
         return
     }
     addCourseToTable(courseName, [{
-        status: "", section: courseName, activity: "", subactivities: {}, times: [{
+        status: "", sectionName: courseName, activity: "", subactivities: {}, times: [{
             days: Weekday.Monday | Weekday.Tuesday | Weekday.Wednesday | Weekday.Thursday | Weekday.Friday,
             beginTime: LocalTime.parse("08:00"),
             endTime: LocalTime.parse("09:00")

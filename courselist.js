@@ -1,3 +1,6 @@
+/** @type {Course[]} */
+var courses = []
+
 /**
  * @typedef {Object} Course
  * @property {string} courseName

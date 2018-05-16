@@ -1,3 +1,12 @@
+/** @type {Schedule[]} */
+var schedules = []
+/** @type {Schedule[]} */
+var filteredSchedules = []
+/** @type {string[]} */
+var lockedSections = []
+/** @type {number} */
+var currPage = 1
+
 /**
  * Updates the pagination with new selected index and reloads the timetable
  * @param {number} index 

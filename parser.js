@@ -47,12 +47,24 @@ function parseSessions(completion) {
 }
 
 /**
+ * @param {string} campus 
+ * @param {string} year 
+ * @param {string} session 
+ * @param {string} subject 
+ * @param {string} course 
+ * @returns {string}
+ */
+function urlForCourse(campus, year, session, subject, course) {
+    return `https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&campuscd=${campus}&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`
+}
+
+/**
  * @callback sesctionsCallback
  * @param {Section[]} sections
  */
 
 /**
- * 
+ * Parses all sections of a certain course, filters for specific term
  * @param {string} campus 
  * @param {string} year 
  * @param {string} session 
@@ -180,5 +192,5 @@ function parseSections(campus, year, session, subject, course, term, completion)
         }
     }
 
-    $.ajax({ url: `https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&campuscd=${campus}&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`, success: parse });
+    $.ajax({ url: 'https://cors-anywhere.herokuapp.com/' + urlForCourse(campus, year, session, subject, course), success: parse });
 }
