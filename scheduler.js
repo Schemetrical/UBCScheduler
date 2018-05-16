@@ -107,7 +107,7 @@ function fitsInSchedule(sectionA, schedule) {
                 // false if same day and same time
                 if (timeA.days & timeB.days &&
                     timeCollides(timeA.beginTime, timeA.endTime, timeB.beginTime, timeB.endTime))
-                return false
+                    return false
             }
         }
     }
