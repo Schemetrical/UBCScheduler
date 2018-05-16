@@ -3,7 +3,6 @@ window.onload = setup
 var currBlock = 1
 
 function setup() {
-
     $('#coursesTable > tbody').on('click', '.delete', removeCourse)
     $('#timetable').on('click', '#courseBlock', lockSection)
     $('#schedule-pagination').twbsPagination($.extend({}, defaultOptions, {
