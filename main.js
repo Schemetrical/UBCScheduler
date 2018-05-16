@@ -64,6 +64,7 @@ function addCourse() {
                 lockSectionAndTerm(false)
             }
             alert("Course not found.")
+            console.log("Course not found: " + urlForCourse(campus, year, session, subject, course))
             // TODO: Throw a nicer error here
         } else {
             addCourseToTable(courseName, sections)
@@ -87,18 +88,12 @@ function lockSectionAndTerm(locked) {
 function addEmptyBlock() {
     var weekdayMask = Weekday.None
     // This can be improved with a mask for example
-    let mon = $("#weekdayM").attr("aria-pressed") === "true"
-    let tue = $("#weekdayT").attr("aria-pressed") === "true"
-    let wed = $("#weekdayW").attr("aria-pressed") === "true"
-    let thu = $("#weekdayH").attr("aria-pressed") === "true"
-    let fri = $("#weekdayF").attr("aria-pressed") === "true"
+    let weekdayMapping = ["#weekdayM", "#weekdayT", "#weekdayW", "#weekdayH", "#weekdayF"]
+    for (let i = 0; i < weekdayMapping.length; i++) {
+        if ($(weekdayMapping[i]).attr("aria-pressed") === "true") weekdayMask += (1 << i)
+    }
     let beginTime = $("#inputBeginTime").val()
     let endTime = $("#inputEndTime").val()
-    if (mon) weekdayMask += Weekday.Monday
-    if (tue) weekdayMask += Weekday.Tuesday
-    if (wed) weekdayMask += Weekday.Wednesday
-    if (thu) weekdayMask += Weekday.Thursday
-    if (fri) weekdayMask += Weekday.Friday
 
     // TODO: Need validation here
     if (weekdayMask == Weekday.None) {

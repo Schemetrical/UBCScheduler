@@ -33,6 +33,8 @@ function updatePaginationTimetable(index) {
         loadTimetable(filteredSchedules)
         if (courses.length != 0) {
             alert("No timetable could be generated with these courses.")
+            console.log("No courses generated:")
+            console.log(courses)
         }
     }
 }
