@@ -4,8 +4,8 @@
 }
 
 #timetable > tbody > tr > td { 
-    width: 18%; 
-    min-width: 80px;
+    min-width: 40px;
+    width: 18%;
     font-size: 0.8em;
 }
 
