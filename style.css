@@ -3,14 +3,9 @@
     text-align: center;
 }
 
-#timetable { 
-    table-layout: fixed; 
-    overflow-x: auto;
-    word-wrap: break-word;
-}
-
 #timetable > tbody > tr > td { 
     width: 18%; 
+    min-width: 80px;
     font-size: 0.8em;
 }
 
@@ -18,7 +13,6 @@
     cursor: pointer;
     color: #495057;
     background-color: #e9ecef;
-    /* border-radius: .5rem; */
 }
 
 #courseBlock.course-locked {
@@ -40,5 +34,5 @@
 }
 
 body {
-    min-width: 385px;
+    min-width: 320px;
 }

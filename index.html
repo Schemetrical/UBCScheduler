@@ -4,7 +4,7 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
@@ -90,7 +90,8 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" for="inputCourse">Course</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" onkeyup="return checkSubmitCourse(event)" required>
+                    <input type="text" class="form-control" placeholder="CPSC 110" id="inputCourse" onkeyup="return checkSubmitCourse(event)"
+                        required>
                 </div>
                 <button type='button' class="btn btn-primary" onclick="addCourse()" id="buttonAdd">Add Course</button>
                 <br>
@@ -171,20 +172,22 @@
 
             <!-- COLUMN 3 -->
             <div class="col-lg-5">
-                <table class="table table-sm table-bordered" id="timetable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Time</th>
-                            <th scope="col">Mon</th>
-                            <th scope="col">Tue</th>
-                            <th scope="col">Wed</th>
-                            <th scope="col">Thu</th>
-                            <th scope="col">Fri</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" id="timetable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Time</th>
+                                <th scope="col">Mon</th>
+                                <th scope="col">Tue</th>
+                                <th scope="col">Wed</th>
+                                <th scope="col">Thu</th>
+                                <th scope="col">Fri</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
