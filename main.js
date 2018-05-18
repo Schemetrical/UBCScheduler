@@ -141,7 +141,9 @@ function schedule() {
     $("#schedule").text("Scheduling...")
     lockedSections = []
     currPage = 1
-    ga('send', 'event', 'Timetable', 'schedule', $("#inputCampus").val());
+    if (courses.length > 0) {
+        ga('send', 'event', 'Timetable', 'schedule', versionString);
+    }
 
     var fn = scheduleTimetable.bind(this, courses.slice(0), function (newSchedules) {// schedule using a shallow copy
         schedules = newSchedules
