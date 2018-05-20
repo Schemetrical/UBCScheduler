@@ -27,7 +27,7 @@ function removeCourse() {
         return course.courseName !== text
     })
     $(this).parents('tr').remove();
-    if (courses.length == 0) {
+    if (courses.length == 0 && $("#buttonAdd").text() === "Add Course") { // not in progress of adding course
         lockSectionAndTerm(false)
     }
 }
