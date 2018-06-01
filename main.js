@@ -1,7 +1,7 @@
 window.onload = setup
 /** @type {number} */
 var currBlock = 1
-let versionString = "0.3.8"
+let versionString = "0.3.9"
 
 function setup() {
     $('#coursesTable > tbody').on('click', '.delete', removeCourse)

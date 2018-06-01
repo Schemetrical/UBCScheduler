@@ -72,7 +72,7 @@ function scheduleLabsTuts(listOfSchedule) {
  * @returns {Schedule[]}
  */
 function scheduleListOfSubactivity(listOfSubactivity, listOfSchedule) {
-    if (listOfSubactivity.length == 0) {
+    if (listOfSubactivity.length == 0 || listOfSchedule.length == 0) {
         return listOfSchedule
     }
     let listOfSection = listOfSubactivity.pop()
