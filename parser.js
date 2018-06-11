@@ -174,6 +174,13 @@ function parseSections(campus, year, session, subject, course, term, completion)
             }
             subactivities[section.activity].push(section)
         }
+        // if there are sections that have no subactivities but the last section has subactivities, then take that. (BIOL 200)
+        for (section of newSections) {
+            if (Object.keys(section.subactivities).length === 0) {
+                section.subactivities = newSections[newSections.length - 1].subactivities
+            }
+        }
+
         return newSections
     }
 
