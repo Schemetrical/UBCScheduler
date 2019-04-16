@@ -37,13 +37,22 @@ function parseSessions(completion) {
 
         var pattern = /sessyr=(\d{4})&sesscd=(\w)/g;
         var match = pattern.exec(data)
-        while (match !== null) {
-            sessions.push(match[1] + match[2])
-            match = pattern.exec(data);
+        if (match === null) {
+            pattern = /sesscd=(\w)&sessyr=(\d{4})/g;
+            match = pattern.exec(data)
+            while (match !== null) {
+                sessions.push(match[2] + match[1])
+                match = pattern.exec(data);
+            }
+        } else {
+            while (match !== null) {
+                sessions.push(match[1] + match[2])
+                match = pattern.exec(data);
+            }
         }
         completion(sessions.sort().reverse())
     }
-    $.ajax({ url: 'https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main', success: parse });
+    $.ajax({ url: 'https://cors.io/?https://courses.students.ubc.ca/cs/main', success: parse });
 }
 
 /**
@@ -55,7 +64,7 @@ function parseSessions(completion) {
  * @returns {string}
  */
 function urlForCourse(campus, year, session, subject, course) {
-    return `https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=3&campuscd=${campus}&sessyr=${year}&sesscd=${session}&dept=${subject}&course=${course}`
+    return `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept=${subject}&course=${course}&campuscd=${campus}&sessyr=${year}&sesscd=${session}`
 }
 
 /**
@@ -199,5 +208,5 @@ function parseSections(campus, year, session, subject, course, term, completion)
         }
     }
 
-    $.ajax({ url: 'https://cors-anywhere.herokuapp.com/' + urlForCourse(campus, year, session, subject, course), success: parse });
+    $.ajax({ url: 'https://cors.io/?' + urlForCourse(campus, year, session, subject, course), success: parse });
 }
