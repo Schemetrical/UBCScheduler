@@ -52,7 +52,7 @@ function parseSessions(completion) {
         }
         completion(sessions.sort().reverse())
     }
-    $.ajax({ url: 'https://cors.io/?https://courses.students.ubc.ca/cs/main', success: parse });
+    $.ajax({ url: 'https://cors-anywhere.herokuapp.com/https://courses.students.ubc.ca/cs/main', success: parse, headers: { "X-Requested-With": "XmlHttpRequest" } });
 }
 
 /**
@@ -208,5 +208,5 @@ function parseSections(campus, year, session, subject, course, term, completion)
         }
     }
 
-    $.ajax({ url: 'https://cors.io/?' + urlForCourse(campus, year, session, subject, course), success: parse });
+    $.ajax({ url: 'https://cors-anywhere.herokuapp.com/' + urlForCourse(campus, year, session, subject, course), success: parse, headers: { "X-Requested-With": "XmlHttpRequest" } });
 }
