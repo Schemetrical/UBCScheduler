@@ -115,7 +115,7 @@ function parseSections(campus, year, session, subject, course, term, completion)
         let days = parseWeekdays($(items[6]).text())
         let beginTime = preprocessTime($(items[7]).text())
         let endTime = preprocessTime($(items[8]).text())
-        // let comments = $(items[8]).text()
+        // let comments = $(items[9]).text()
         if (courseTerm !== term && courseTerm !== "1-2") {
             sections.push({ status: status, sectionName: sectionName, activity: activity, times: [] })
             return // Ignore terms that do not apply but take note
