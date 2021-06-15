@@ -1,4 +1,4 @@
-# UBCScheduler
+# Fixing UBCScheduler
 UBC Course Scheduler
 
 Things you can do:
